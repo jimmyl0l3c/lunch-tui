@@ -1,14 +1,11 @@
-module main
+module lunch/menu
 
 go 1.24.0
 
-replace lunch/menu => ./menu
-
-require lunch/menu v0.0.0-00010101000000-000000000000
+require github.com/charmbracelet/lipgloss v1.0.0
 
 require (
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
-	github.com/charmbracelet/lipgloss v1.0.0 // indirect
 	github.com/charmbracelet/x/ansi v0.4.2 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
