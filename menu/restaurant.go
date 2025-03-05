@@ -33,7 +33,7 @@ func RestaurantColumn(restaurant Restaurant, maxWidth int) string {
 }
 
 func RestaurantRow(restaurants []Restaurant, physicalWidth int) string {
-    var maxMenuWidth = (physicalWidth - 16) / len(restaurants)
+    var maxMenuWidth = (physicalWidth - 4 - (6 * len(restaurants))) / len(restaurants)
 
     var lastIndex = len(restaurants) - 1
 
