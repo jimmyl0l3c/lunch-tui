@@ -12,15 +12,15 @@ var hightlightColor = lipgloss.Color("#EE6FF8")
 var mealHighlight = lipgloss.NewStyle().Foreground(hightlightColor)
 
 type Meal struct {
-	Name string
+	Name   string
 	Detail string
-	Price string
+	Price  string
 }
 
 func (m Meal) String(maxWidth int) string {
 	return mealHighlight.Width(maxWidth).Render(m.Name) + "\n" +
 		faint.Width(maxWidth).Render(m.Detail) + "\n" +
-        m.Price
+		m.Price
 }
 
 func Menu(meals []Meal, maxWidth int) string {
@@ -39,5 +39,5 @@ func Menu(meals []Meal, maxWidth int) string {
 		l.Item(d.String(maxWidth))
 	}
 
-    return l.String()
+	return l.String()
 }
