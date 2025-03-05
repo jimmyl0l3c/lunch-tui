@@ -1,53 +1,43 @@
 package menu
 
 import (
-	"fmt"
-
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/list"
 )
 
-var meals = []Meal {
-    {"Gulášová polévka s hlívou", "Gulášová polévka s hlívou, paprikou a kukuřicí", "50 Kč"},
-    {"1: Zeleninové kari s batáty. Basmati rýže", "Svěží kari s batáty, paprikou, fawa fazolemi a ananasem. Basmati rýže. Marinované tofu.", "165 Kč"},
-    {"2: Řecké ragú s lilky. Bulgur. Feta.", "Řecké ragú se sojovými výpečky, lilky, cuketou, rajčaty a olivami. Feta sýr. Bulgur.", "165 Kč"},
-    {"3: Salát z červené řepy. Sýr. Pečivo.", "Salát z červené řepy, fenyklu a pomerančů. Kozí sýr. Naan.", "165 Kč"},
+var faint = lipgloss.NewStyle().Faint(true)
+
+var hightlightColor = lipgloss.Color("#EE6FF8")
+
+var mealHighlight = lipgloss.NewStyle().Foreground(hightlightColor)
+
+type Meal struct {
+	Name string
+	Detail string
+	Price string
 }
 
-const selected = 1
+func (m Meal) String(maxWidth int) string {
+	return mealHighlight.Width(maxWidth).Render(m.Name) + "\n" +
+		faint.Width(maxWidth).Render(m.Detail) + "\n" +
+        m.Price
+}
 
-func Test() {
-	baseStyle := lipgloss.NewStyle().
-		MarginBottom(1).
-		MarginLeft(1)
-	dimColor := lipgloss.Color("250")
-	hightlightColor := lipgloss.Color("#EE6FF8")
-
+func Menu(meals []Meal, maxWidth int) string {
 	l := list.New().
 		Enumerator(func(_ list.Items, i int) string {
-			if i == selected {
-				return "│\n│\n│"
-			}
-			return " "
+			return ""
 		}).
 		ItemStyleFunc(func(_ list.Items, i int) lipgloss.Style {
-			st := baseStyle
-			if selected == i {
-				return st.Foreground(hightlightColor)
-			}
-			return st.Foreground(dimColor)
+			return lipgloss.NewStyle().MarginBottom(1)
 		}).
 		EnumeratorStyleFunc(func(_ list.Items, i int) lipgloss.Style {
-			if selected == i {
-				return lipgloss.NewStyle().Foreground(hightlightColor)
-			}
-			return lipgloss.NewStyle().Foreground(dimColor)
+			return lipgloss.NewStyle()
 		})
 
 	for _, d := range meals {
-		l.Item(d.String())
+		l.Item(d.String(maxWidth))
 	}
 
-	fmt.Println()
-	fmt.Println(l)
+    return l.String()
 }
