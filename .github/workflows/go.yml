@@ -54,7 +54,7 @@ jobs:
       run: |
           platform="${{ matrix.platform }}"
           digest="${{ steps.artifact-upload-step.outputs.artifact-digest }}"
-          echo "output_${platform}=${digest}" >> "$GITHUB_OUTPUT"
+          echo "digest_${platform}=${digest}" >> "$GITHUB_OUTPUT"
 
   test-digest:
       runs-on: ubuntu-latest
