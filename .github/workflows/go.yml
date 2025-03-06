@@ -48,7 +48,7 @@ jobs:
       id: digest-output
       run: |
           platform="${{ matrix.platform }}"
-          digest=$(shasum -a 256 ${{ matrix.binary }})
+          digest=$(openssl dgst -sha256 ${{ matrix.binary }})
           echo "digest_${platform}=${digest}" >> "$GITHUB_OUTPUT"
       
     - name: Upload artifacts
