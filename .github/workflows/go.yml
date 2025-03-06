@@ -51,7 +51,7 @@ jobs:
     - name: Output digest
       run: |
           platform="${{ matrix.platform }}"
-          digest="${{ steps.artifact-upload-step.outputs.artifact-id }}"
+          digest="${{ steps.artifact-upload-step.outputs.artifact-digest }}"
           echo "output_${platform}=${digest}" >> "$GITHUB_OUTPUT"
 
   test-digest:
