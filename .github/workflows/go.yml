@@ -25,8 +25,8 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     outputs:
-      digest_windows: ${{ steps.artifact-upload-step.outputs.digest_windows }}
-      digest_linux: ${{ steps.artifact-upload-step.outputs.digest_linux }}
+      digest_windows: ${{ steps.digest-output.outputs.digest_windows }}
+      digest_linux: ${{ steps.digest-output.outputs.digest_linux }}
     steps:
     - uses: actions/checkout@v4
 
@@ -50,10 +50,11 @@ jobs:
         
     - name: Output digest
       shell: bash
+      id: digest-output
       run: |
           platform="${{ matrix.platform }}"
           digest="${{ steps.artifact-upload-step.outputs.artifact-digest }}"
-          echo "output_$platform=$digest" >> "$GITHUB_OUTPUT"
+          echo "output_${platform}=${digest}" >> "$GITHUB_OUTPUT"
 
   test-digest:
       runs-on: ubuntu-latest
