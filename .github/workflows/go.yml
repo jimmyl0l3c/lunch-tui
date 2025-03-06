@@ -49,6 +49,7 @@ jobs:
         path: ${{ matrix.platform == 'windows' && 'main.exe' || 'main' }}
         
     - name: Output digest
+      shell: bash
       run: |
           platform="${{ matrix.platform }}"
           digest="${{ steps.artifact-upload-step.outputs.artifact-digest }}"
