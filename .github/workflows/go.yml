@@ -6,13 +6,24 @@ name: Go
 on:
   push:
     branches: [ "master" ]
+    tags:
+      - "v*.*.*"
   pull_request:
     branches: [ "master" ]
 
 jobs:
 
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [windows, linux]
+        include:
+          - platform: windows
+            os: windows-latest
+          - platform: linux
+            os: ubuntu-latest
+
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
 
@@ -26,3 +37,31 @@ jobs:
 
     - name: Test
       run: go test -v ./...
+      
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: main-${{ matrix.platform }}
+        path: ${{ matrix.platform == 'windows' && 'main.exe' || 'main' }}
+
+  create-new-release:
+      if: startsWith(github.ref, 'refs/tags/')
+      needs: build
+      runs-on: ubuntu-latest
+      name: Create new release
+      steps:
+        - name: Download artifact
+          uses: actions/download-artifact@v4
+          with:
+            path: out
+            pattern: main-*
+            merge-multiple: true
+  
+        - name: Release
+          uses: softprops/action-gh-release@v2
+          with:
+            draft: false
+            token: ${{ secrets.GH_TOKEN }}
+            generate_release_notes: true
+            files: out/*
+            fail_on_unmatched_files: true
