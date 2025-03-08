@@ -17,7 +17,7 @@ var docStyle = lipgloss.NewStyle().Padding(1, 2, 1, 2)
 
 func main() {
 	physicalWidth, _, _ := term.GetSize(int(os.Stdout.Fd()))
-	scraperVersion := "v1.0.0"
+	scraperVersion := "v1.0.1"
 
 	currentTime := time.Now().Local()
 	currentDate := currentTime.Format("2.1.")
