@@ -1,16 +1,11 @@
-module main
+module github.com/jimmyl0l3c/lunch-tui
 
 go 1.24.0
 
-replace lunch/menu => ./menu
-
-replace lunch/scraper => ./scraper
-
 require (
 	github.com/charmbracelet/lipgloss v1.0.0
+	github.com/gocolly/colly v1.2.0
 	golang.org/x/term v0.30.0
-	lunch/menu v0.0.0-00010101000000-000000000000
-	lunch/scraper v0.0.0-00010101000000-000000000000
 )
 
 require (
@@ -22,7 +17,6 @@ require (
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/charmbracelet/x/ansi v0.4.2 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
-	github.com/gocolly/colly v1.2.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/kennygrant/sanitize v1.2.4 // indirect

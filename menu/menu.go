@@ -1,15 +1,12 @@
 package menu
 
 import (
+	"fmt"
+
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/list"
+	"github.com/jimmyl0l3c/lunch-tui/styles"
 )
-
-var faint = lipgloss.NewStyle().Faint(true)
-
-var hightlightColor = lipgloss.Color("#EE6FF8")
-
-var mealHighlight = lipgloss.NewStyle().Foreground(hightlightColor)
 
 type Meal struct {
 	Name   string
@@ -18,9 +15,10 @@ type Meal struct {
 }
 
 func (m Meal) String(maxWidth int) string {
-	return mealHighlight.Width(maxWidth).Render(m.Name) + "\n" +
-		faint.Width(maxWidth).Render(m.Detail) + "\n" +
-		m.Price
+	return fmt.Sprintf("%s\n%s\n%s",
+		styles.HighlightStyle.Width(maxWidth).Render(m.Name),
+		styles.FaintStyle.Width(maxWidth).Render(m.Detail),
+		m.Price)
 }
 
 func Menu(meals []Meal, maxWidth int) string {

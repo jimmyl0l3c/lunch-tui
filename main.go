@@ -7,9 +7,10 @@ import (
 	"time"
 
 	"github.com/charmbracelet/lipgloss"
+	"github.com/jimmyl0l3c/lunch-tui/menu"
+	"github.com/jimmyl0l3c/lunch-tui/scraper"
+	"github.com/jimmyl0l3c/lunch-tui/styles"
 	"golang.org/x/term"
-	"lunch/menu"
-	"lunch/scraper"
 )
 
 var docStyle = lipgloss.NewStyle().Padding(1, 2, 1, 2)
@@ -20,6 +21,11 @@ func main() {
 
 	currentTime := time.Now().Local()
 	currentDate := currentTime.Format("2.1.")
+
+	if weekday := currentTime.Weekday(); weekday == time.Sunday || weekday == time.Saturday {
+		fmt.Println(styles.Error("Cannot display menu during weekend"))
+		return
+	}
 
 	menu.PrintTitle(scraperVersion, currentDate, physicalWidth)
 
@@ -34,5 +40,4 @@ func main() {
 	doc.WriteString(menu.RestaurantRow(restaurants, physicalWidth))
 
 	fmt.Println(docStyle.Render(doc.String()))
-
 }

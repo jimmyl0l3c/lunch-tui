@@ -20,10 +20,10 @@ jobs:
         include:
           - platform: windows
             os: windows-latest
-            binary: main.exe
+            binary: lunch-tui.exe
           - platform: linux
             os: ubuntu-latest
-            binary: main
+            binary: lunch-tui
 
     runs-on: ${{ matrix.os }}
     outputs:
@@ -38,7 +38,7 @@ jobs:
         go-version: '1.24'
 
     - name: Build
-      run: go build -v ./...
+      run: go build
 
     - name: Test
       run: go test -v ./...
@@ -50,12 +50,12 @@ jobs:
           platform="${{ matrix.platform }}"
           digest=$(openssl dgst -sha256 ${{ matrix.binary }})
           echo "digest_${platform}=${digest}" >> "$GITHUB_OUTPUT"
-      
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       id: artifact-upload-step
       with:
-        name: main-${{ matrix.platform }}
+        name: lunch-tui-${{ matrix.platform }}
         path: ${{ matrix.binary }}
 
   log-digests:
@@ -76,14 +76,14 @@ jobs:
           uses: actions/download-artifact@v4
           with:
             path: out
-            pattern: main-*
+            pattern: lunch-tui-*
             merge-multiple: true
 
         - name: Add digests
           run: |
             echo "${{ needs.build.outputs.digest_windows }}" > out/checksum.txt
             echo "${{ needs.build.outputs.digest_linux }}" >> out/checksum.txt
-  
+
         - name: Release
           uses: softprops/action-gh-release@v2
           with:
