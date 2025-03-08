@@ -3,7 +3,7 @@ package scraper
 import (
 	"fmt"
 	"github.com/gocolly/colly"
-	"lunch/menu"
+	"github.com/jimmyl0l3c/lunch-tui/menu"
 	"regexp"
 )
 
@@ -35,9 +35,7 @@ func ScrapeOlomouc(url string, restaurantName string, dateFilter string) menu.Re
 				return
 			}
 
-			foundDate := fmt.Sprintf("%s.%s.", matchedDate[1], matchedDate[2])
-
-			if foundDate == dateFilter {
+			if dateFilter == fmt.Sprintf("%s.%s.", matchedDate[1], matchedDate[2]) {
 				menuIndex = i
 			}
 		})
@@ -52,18 +50,21 @@ func ScrapeOlomouc(url string, restaurantName string, dateFilter string) menu.Re
 				return
 			}
 
-			h.ForEach("tr", func(i int, tr *colly.HTMLElement) {
-				mealIndex := tr.ChildText("td:first-child")
+			h.ForEach("tr", func(_ int, tr *colly.HTMLElement) {
 				mealName := tr.ChildText("td:nth-child(2)")
 				mealPrice := tr.ChildText("td:nth-child(3)")
 
-				if len(mealIndex) > 0 {
-					mealName = mealIndex + " " + mealName
+				if mealIndex := tr.ChildText("td:first-child"); len(mealIndex) > 0 {
+					mealName = fmt.Sprintf("%s %s", mealIndex, mealName)
 				} else {
 					mealPrice = soupPrice
 				}
 
-				meals = append(meals, menu.Meal{Name: mealName, Detail: unknownDetail, Price: mealPrice})
+				meals = append(meals, menu.Meal{
+					Name:   mealName,
+					Detail: unknownDetail,
+					Price:  mealPrice,
+				})
 			})
 		})
 
@@ -76,9 +77,17 @@ func ScrapeOlomouc(url string, restaurantName string, dateFilter string) menu.Re
 }
 
 func ScrapeMd(dateFilter string) menu.Restaurant {
-	return ScrapeOlomouc("https://www.olomouc.cz/poledni-menu/MD-Original-1869-id2208", "M.D. Original 1869", dateFilter)
+	return ScrapeOlomouc(
+		"https://www.olomouc.cz/poledni-menu/MD-Original-1869-id2208",
+		"M.D. Original 1869",
+		dateFilter,
+	)
 }
 
 func ScrapePaulus(dateFilter string) menu.Restaurant {
-	return ScrapeOlomouc("https://www.olomouc.cz/poledni-menu/Bistro-Paulus-6806", "Bistro Paulus", dateFilter)
+	return ScrapeOlomouc(
+		"https://www.olomouc.cz/poledni-menu/Bistro-Paulus-6806",
+		"Bistro Paulus",
+		dateFilter,
+	)
 }

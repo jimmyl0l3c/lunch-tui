@@ -30,12 +30,10 @@ func RestaurantColumn(restaurant Restaurant, maxWidth int) string {
 	)
 }
 
-func RestaurantRow(restaurants []Restaurant, physicalWidth int) string {
-	var maxMenuWidth = (physicalWidth - 4 - (6 * len(restaurants))) / len(restaurants)
+func RestaurantRow(restaurants []Restaurant, physicalWidth int) (row string) {
+	maxMenuWidth := (physicalWidth - 4 - (6 * len(restaurants))) / len(restaurants)
 
-	var lastIndex = len(restaurants) - 1
-
-	var row = ""
+	lastIndex := len(restaurants) - 1
 
 	for i, restaurant := range restaurants {
 		column := RestaurantColumn(restaurant, maxMenuWidth)
@@ -49,5 +47,5 @@ func RestaurantRow(restaurants []Restaurant, physicalWidth int) string {
 		}
 	}
 
-	return row
+	return
 }

@@ -1,6 +1,8 @@
 package menu
 
 import (
+	"fmt"
+
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/list"
 )
@@ -18,9 +20,10 @@ type Meal struct {
 }
 
 func (m Meal) String(maxWidth int) string {
-	return mealHighlight.Width(maxWidth).Render(m.Name) + "\n" +
-		faint.Width(maxWidth).Render(m.Detail) + "\n" +
-		m.Price
+	return fmt.Sprintf("%s\n%s\n%s",
+		mealHighlight.Width(maxWidth).Render(m.Name),
+		faint.Width(maxWidth).Render(m.Detail),
+		m.Price)
 }
 
 func Menu(meals []Meal, maxWidth int) string {

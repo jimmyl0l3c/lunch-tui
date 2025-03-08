@@ -3,7 +3,7 @@ package scraper
 import (
 	"fmt"
 	"github.com/gocolly/colly"
-	"lunch/menu"
+	"github.com/jimmyl0l3c/lunch-tui/menu"
 )
 
 const rozmarynyTitle = "Rozmarýny"
@@ -30,7 +30,11 @@ func ScrapeRozmaryny(dateFilter string) menu.Restaurant {
 				return
 			}
 
-			meals = append(meals, menu.Meal{Name: h.ChildText(".dailyMenu"), Detail: "", Price: h.ChildText(".dailyMenuPrice")})
+			meals = append(meals, menu.Meal{
+				Name:   h.ChildText(".dailyMenu"),
+				Detail: "",
+				Price:  h.ChildText(".dailyMenuPrice"),
+			})
 		})
 
 		e.ForEach(".dailyMenuDescRow", func(i int, h *colly.HTMLElement) {

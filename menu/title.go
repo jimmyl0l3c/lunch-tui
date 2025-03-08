@@ -25,11 +25,21 @@ var (
 
 func PrintTitle(version string, currentDate string, physicalWidth int) {
 	title := lipgloss.JoinVertical(lipgloss.Center,
-		titleStyle.Render("Toolchain lunch menu scraper"+divider+currentDate+divider+url(version)),
-		sourceStyle.Render("Source available"+divider+url("https://github.com/jimmyl0l3c/lunch-tui")),
+		titleStyle.Render(fmt.Sprint(
+			"Toolchain lunch menu scraper",
+			divider,
+			currentDate,
+			divider,
+			url(version),
+		)),
+		sourceStyle.Render(fmt.Sprint(
+			"Source available",
+			divider,
+			url("https://github.com/jimmyl0l3c/lunch-tui"),
+		)),
 	)
 
 	centeredTitle := lipgloss.PlaceHorizontal(physicalWidth, lipgloss.Center, title)
 
-	fmt.Println(centeredTitle + "\n")
+	fmt.Print(centeredTitle, "\n\n")
 }

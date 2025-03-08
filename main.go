@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/charmbracelet/lipgloss"
+	"github.com/jimmyl0l3c/lunch-tui/menu"
+	"github.com/jimmyl0l3c/lunch-tui/scraper"
 	"golang.org/x/term"
-	"lunch/menu"
-	"lunch/scraper"
 )
 
 var docStyle = lipgloss.NewStyle().Padding(1, 2, 1, 2)

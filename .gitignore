@@ -1,0 +1,3 @@
+# Ignore binaries
+lunch-tui
+*.exe
