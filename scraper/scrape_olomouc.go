@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gocolly/colly"
 	"github.com/jimmyl0l3c/lunch-tui/menu"
+	"github.com/jimmyl0l3c/lunch-tui/styles"
 	"regexp"
 )
 
@@ -16,7 +17,7 @@ func ScrapeOlomouc(url string, restaurantName string, dateFilter string) menu.Re
 	c := colly.NewCollector()
 
 	c.OnError(func(_ *colly.Response, err error) {
-		fmt.Println(errorStyle.Render("Something went wrong:"), err)
+		fmt.Println(styles.Error("Something went wrong:"), err)
 	})
 
 	restaurant := menu.Restaurant{Name: restaurantName, Meals: make([]menu.Meal, 0)}
@@ -41,7 +42,7 @@ func ScrapeOlomouc(url string, restaurantName string, dateFilter string) menu.Re
 		})
 
 		if menuIndex < 0 {
-			fmt.Println(errorStyle.Render("Could not match date"))
+			fmt.Println(styles.Error("Could not match date"))
 			return
 		}
 

@@ -4,38 +4,22 @@ import (
 	"fmt"
 
 	"github.com/charmbracelet/lipgloss"
-)
-
-var (
-	url = lipgloss.NewStyle().Foreground(special).Render
-
-	divider = lipgloss.NewStyle().
-		SetString("•").
-		Padding(0, 1).
-		Foreground(subtle).
-		String()
-
-	titleStyle = base.MarginTop(1)
-
-	sourceStyle = base.
-			BorderStyle(lipgloss.NormalBorder()).
-			BorderTop(true).
-			BorderForeground(subtle)
+	"github.com/jimmyl0l3c/lunch-tui/styles"
 )
 
 func PrintTitle(version string, currentDate string, physicalWidth int) {
 	title := lipgloss.JoinVertical(lipgloss.Center,
-		titleStyle.Render(fmt.Sprint(
+		styles.Title(fmt.Sprint(
 			"Toolchain lunch menu scraper",
-			divider,
+			styles.Divider,
 			currentDate,
-			divider,
-			url(version),
+			styles.Divider,
+			styles.Url(version),
 		)),
-		sourceStyle.Render(fmt.Sprint(
+		styles.Subtitle(fmt.Sprint(
 			"Source available",
-			divider,
-			url("https://github.com/jimmyl0l3c/lunch-tui"),
+			styles.Divider,
+			styles.Url("https://github.com/jimmyl0l3c/lunch-tui"),
 		)),
 	)
 
