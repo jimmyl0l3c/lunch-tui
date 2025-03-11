@@ -1,3 +1,4 @@
 # Ignore binaries
+lunch-tui-arm
 lunch-tui
 *.exe
