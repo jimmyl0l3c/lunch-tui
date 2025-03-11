@@ -16,7 +16,7 @@ jobs:
   build:
     strategy:
       matrix:
-        platform: [windows, linux]
+        platform: [windows, linux, linux-arm]
         include:
           - platform: windows
             os: windows-latest
@@ -24,11 +24,15 @@ jobs:
           - platform: linux
             os: ubuntu-latest
             binary: lunch-tui
+          - platform: linux-arm
+            os: ubuntu-24.04-arm
+            binary: lunch-tui-arm
 
     runs-on: ${{ matrix.os }}
     outputs:
       digest_windows: ${{ steps.digest-output.outputs.digest_windows }}
       digest_linux: ${{ steps.digest-output.outputs.digest_linux }}
+      digest_linux-arm: ${{ steps.digest-output.outputs.digest_linux-arm }}
     steps:
     - uses: actions/checkout@v4
 
@@ -38,7 +42,7 @@ jobs:
         go-version: '1.24'
 
     - name: Build
-      run: go build
+      run: go build -o ${{ matrix.binary }}
 
     - name: Test
       run: go test -v ./...
@@ -83,6 +87,7 @@ jobs:
           run: |
             echo "${{ needs.build.outputs.digest_windows }}" > out/checksum.txt
             echo "${{ needs.build.outputs.digest_linux }}" >> out/checksum.txt
+            echo "${{ needs.build.outputs.digest_linux-arm }}" >> out/checksum.txt
 
         - name: Release
           uses: softprops/action-gh-release@v2
