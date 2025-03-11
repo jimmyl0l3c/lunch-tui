@@ -8,10 +8,7 @@ import (
 	"regexp"
 )
 
-const (
-	soupPrice     = "V ceně jídla"
-	unknownDetail = "n/a"
-)
+const soupPrice = "V ceně jídla"
 
 func ScrapeOlomouc(url string, restaurantName string, dateFilter string) menu.Restaurant {
 	c := colly.NewCollector()
@@ -62,9 +59,8 @@ func ScrapeOlomouc(url string, restaurantName string, dateFilter string) menu.Re
 				}
 
 				meals = append(meals, menu.Meal{
-					Name:   mealName,
-					Detail: unknownDetail,
-					Price:  mealPrice,
+					Name:  mealName,
+					Price: mealPrice,
 				})
 			})
 		})
