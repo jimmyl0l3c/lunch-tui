@@ -9,9 +9,9 @@ import (
 	"github.com/jimmyl0l3c/lunch-tui/styles"
 )
 
-func main() {
-	scraperVersion := "v1.0.1"
+const scraperVersion = "v1.1.0"
 
+func main() {
 	currentTime := time.Now().Local()
 	currentDate := currentTime.Format("2.1.")
 
