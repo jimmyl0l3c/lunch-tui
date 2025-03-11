@@ -24,7 +24,7 @@ func (m Meal) String(maxWidth int) string {
 	return fmt.Sprintf("%s\n%s%s",
 		styles.HighlightStyle.Width(maxWidth).Render(m.Name),
 		detail,
-		m.Price)
+		styles.BaseStyle.Render(m.Price))
 }
 
 func Menu(meals []Meal, maxWidth int) string {
