@@ -15,9 +15,15 @@ type Meal struct {
 }
 
 func (m Meal) String(maxWidth int) string {
-	return fmt.Sprintf("%s\n%s\n%s",
+	detail := ""
+
+	if len(m.Detail) > 0 {
+		detail = fmt.Sprint(styles.DetailStyle.Width(maxWidth).Render(m.Detail), "\n")
+	}
+
+	return fmt.Sprintf("%s\n%s%s",
 		styles.HighlightStyle.Width(maxWidth).Render(m.Name),
-		styles.FaintStyle.Width(maxWidth).Render(m.Detail),
+		detail,
 		m.Price)
 }
 

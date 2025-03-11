@@ -11,7 +11,7 @@ var (
 
 	BaseStyle      = lipgloss.NewStyle().Foreground(normal)
 	HighlightStyle = lipgloss.NewStyle().Foreground(hightlight)
-	FaintStyle     = lipgloss.NewStyle().Faint(true)
+	DetailStyle    = lipgloss.NewStyle().Faint(true)
 
 	Error = lipgloss.NewStyle().Foreground(error).Render
 )
