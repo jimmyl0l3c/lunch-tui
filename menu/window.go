@@ -9,7 +9,7 @@ import (
 	"golang.org/x/term"
 )
 
-func RenderWindow(scraperVersion string, currentDate string, restaurants []Restaurant) {
+func RenderWindow(scraperVersion string, ip string, currentDate string, restaurants []Restaurant) {
 	physicalWidth, physicalHeight, _ := term.GetSize(int(os.Stdout.Fd()))
 
 	style := styles.WindowStyle.Height(physicalHeight)
@@ -18,7 +18,11 @@ func RenderWindow(scraperVersion string, currentDate string, restaurants []Resta
 
 	restaurantRow := RestaurantRow(restaurants, physicalWidth)
 
+	mainContent := lipgloss.JoinVertical(lipgloss.Center, fmt.Sprint(title, "\n\n"), restaurantRow)
+
+	ipLine := styles.DetailStyle.Faint(true).Render(fmt.Sprintf("IP: %s", ip))
+
 	fmt.Println(style.Render(
-		lipgloss.JoinVertical(lipgloss.Bottom, fmt.Sprint(title, "\n\n"), restaurantRow),
+		lipgloss.JoinVertical(lipgloss.Right, mainContent, ipLine),
 	))
 }

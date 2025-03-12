@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net"
 	"time"
 
 	"github.com/jimmyl0l3c/lunch-tui/menu"
@@ -10,6 +11,18 @@ import (
 )
 
 const scraperVersion = "v1.1.0"
+
+func getIp() string {
+	conn, err := net.Dial("udp", "8.8.8.8:80")
+
+	if err != nil {
+		fmt.Println(styles.Error("Error when determining local IP:"), err)
+	}
+
+	defer conn.Close()
+
+	return conn.LocalAddr().String()
+}
 
 func refresh() {
 	currentTime := time.Now().Local()
@@ -34,7 +47,7 @@ func refresh() {
 		scraper.ScrapePaulus(currentDate),
 	}
 
-	menu.RenderWindow(scraperVersion, currentDate, restaurants)
+	menu.RenderWindow(scraperVersion, getIp(), currentDate, restaurants)
 }
 
 func main() {
