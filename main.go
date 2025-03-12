@@ -11,7 +11,7 @@ import (
 	"github.com/jimmyl0l3c/lunch-tui/styles"
 )
 
-const scraperVersion = "v1.1.0"
+const scraperVersion = "v1.2.0"
 
 func getIp() string {
 	conn, err := net.Dial("udp", "8.8.8.8:80")
