@@ -11,7 +11,7 @@ import (
 	"github.com/jimmyl0l3c/lunch-tui/styles"
 )
 
-const scraperVersion = "v1.2.0"
+const scraperVersion = "v1.3.0"
 
 func getIp() string {
 	conn, err := net.Dial("udp", "8.8.8.8:80")
@@ -38,33 +38,25 @@ func printMenu(currentTime time.Time) {
 }
 
 func main() {
-	for {
-		currentTime := time.Now().Local()
-		weekday := currentTime.Weekday()
+	currentTime := time.Now().Local()
+	weekday := currentTime.Weekday()
 
-		if weekday == time.Sunday || weekday == time.Saturday {
-			fmt.Println(styles.Error("Cannot display menu during weekend"))
-			return
-		}
-
-		noonTime := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day(), 12, 0, 0, 0, currentTime.Location())
-
-		if hour := currentTime.Hour(); hour >= 12 && weekday != time.Friday {
-			printMenu(currentTime.Add(12 * time.Hour))
-
-			time.Sleep(time.Until(noonTime.Add(24 * time.Hour)))
-		} else if hour >= 12 && weekday == time.Friday {
-			fmt.Println(styles.Url(
-				lipgloss.JoinVertical(lipgloss.Center,
-					"Tomorow is weekend, nothing to show.",
-					"... and what are you doing here anyway?",
-				),
-			))
-			return
-		} else if hour < 12 {
-			printMenu(currentTime)
-
-			time.Sleep(time.Until(noonTime))
-		}
+	if weekday == time.Sunday || weekday == time.Saturday {
+		fmt.Println(styles.Error("Cannot display menu during weekend"))
+		return
 	}
+
+	if hour := currentTime.Hour(); hour >= 12 && weekday != time.Friday {
+		currentTime = currentTime.Add(12 * time.Hour)
+	} else if hour >= 12 && weekday == time.Friday {
+		fmt.Println(styles.Url(
+			lipgloss.JoinVertical(lipgloss.Center,
+				"Tomorow is weekend, nothing to show.",
+				"... and what are you doing here anyway?",
+			),
+		))
+		return
+	}
+
+	printMenu(currentTime)
 }
