@@ -50,7 +50,7 @@ func ScrapeRozmaryny(dateFilter string) menu.Restaurant {
 		restaurant = menu.Restaurant{Name: rozmarynyTitle, Meals: meals}
 	})
 
-	requestErr := RetryScrape(c, rozmarynyUrl)
+	requestErr := retryScrape(c, rozmarynyUrl)
 
 	if requestErr != nil {
 		restaurant.Err = requestErr

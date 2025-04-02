@@ -11,7 +11,7 @@ import (
 const retryCount = 3
 const retryDelay = 5
 
-func RetryScrape(collector *colly.Collector, url string) error {
+func retryScrape(collector *colly.Collector, url string) error {
 	var err error
 
 	for i := range retryCount {

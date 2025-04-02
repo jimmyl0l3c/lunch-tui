@@ -68,7 +68,7 @@ func ScrapeOlomouc(url string, restaurantName string, dateFilter string) menu.Re
 		restaurant = menu.Restaurant{Name: restaurantName, Meals: meals}
 	})
 
-	requestErr := RetryScrape(c, url)
+	requestErr := retryScrape(c, url)
 
 	if requestErr != nil {
 		restaurant.Err = requestErr
