@@ -28,10 +28,16 @@ func getIp() string {
 func printMenu(currentTime time.Time) {
 	currentDate := currentTime.Format("2.1.")
 
-	restaurants := []menu.Restaurant{
-		scraper.ScrapeRozmaryny(currentDate),
-		scraper.ScrapeMd(currentDate),
-		scraper.ScrapePaulus(currentDate),
+	scrapers := []func(string) menu.Restaurant{
+		scraper.ScrapeRozmaryny,
+		scraper.ScrapeMd,
+		scraper.ScrapePaulus,
+	}
+
+	restaurants := make([]menu.Restaurant, 0, len(scrapers))
+
+	for _, scraper := range scrapers {
+		restaurants = append(restaurants, scraper(currentDate))
 	}
 
 	menu.RenderWindow(scraperVersion, getIp(), currentDate, restaurants)

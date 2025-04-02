@@ -8,13 +8,19 @@ import (
 type Restaurant struct {
 	Name  string
 	Meals []Meal
+	Err   error
 }
 
 func RestaurantColumn(restaurant Restaurant, maxWidth int) string {
-	return lipgloss.JoinVertical(lipgloss.Left,
-		styles.ListHeader(restaurant.Name),
-		Menu(restaurant.Meals, maxWidth),
-	)
+	var content string
+
+	if restaurant.Err == nil {
+		content = Menu(restaurant.Meals, maxWidth)
+	} else {
+		content = styles.ErrorStyle.Width(maxWidth).Render("Error:", restaurant.Err.Error())
+	}
+
+	return lipgloss.JoinVertical(lipgloss.Left, styles.ListHeader(restaurant.Name), content)
 }
 
 func RestaurantRow(restaurants []Restaurant, physicalWidth int) (row string) {

@@ -1,23 +1,23 @@
 package scraper
 
 import (
+	"errors"
 	"fmt"
+	"regexp"
+
 	"github.com/gocolly/colly"
 	"github.com/jimmyl0l3c/lunch-tui/menu"
-	"github.com/jimmyl0l3c/lunch-tui/styles"
-	"regexp"
 )
 
 const soupPrice = "V ceně jídla"
 
 func ScrapeOlomouc(url string, restaurantName string, dateFilter string) menu.Restaurant {
 	c := colly.NewCollector()
-
-	c.OnError(func(_ *colly.Response, err error) {
-		fmt.Println(styles.Error("Something went wrong:"), err)
-	})
+	c.CheckHead = true
 
 	restaurant := menu.Restaurant{Name: restaurantName, Meals: make([]menu.Meal, 0)}
+
+	var parsingErr error
 
 	c.OnHTML("section[class=detail-restaurace]", func(e *colly.HTMLElement) {
 		meals := make([]menu.Meal, 0, 5)
@@ -39,7 +39,7 @@ func ScrapeOlomouc(url string, restaurantName string, dateFilter string) menu.Re
 		})
 
 		if menuIndex < 0 {
-			fmt.Println(styles.Error("Could not match date"))
+			parsingErr = errors.New("Could not match date")
 			return
 		}
 
@@ -68,7 +68,13 @@ func ScrapeOlomouc(url string, restaurantName string, dateFilter string) menu.Re
 		restaurant = menu.Restaurant{Name: restaurantName, Meals: meals}
 	})
 
-	c.Visit(url)
+	requestErr := RetryScrape(c, url)
+
+	if requestErr != nil {
+		restaurant.Err = requestErr
+	} else {
+		restaurant.Err = parsingErr
+	}
 
 	return restaurant
 }
