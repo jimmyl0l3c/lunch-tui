@@ -7,8 +7,10 @@ import (
 	"github.com/jimmyl0l3c/lunch-tui/menu"
 )
 
-const rozmarynyTitle = "Rozmarýny"
-const rozmarynyUrl = "https://rozmaryny.cz/menu"
+const (
+	rozmarynyTitle = "Rozmarýny"
+	rozmarynyUrl   = "https://rozmaryny.cz/menu"
+)
 
 func ScrapeRozmaryny(dateFilter string) menu.Restaurant {
 	c := colly.NewCollector()

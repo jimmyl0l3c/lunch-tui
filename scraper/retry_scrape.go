@@ -8,8 +8,10 @@ import (
 	"github.com/jimmyl0l3c/lunch-tui/styles"
 )
 
-const retryCount = 3
-const retryDelay = 5
+const (
+	retryCount = 3
+	retryDelay = 5
+)
 
 func retryScrape(collector *colly.Collector, url string) error {
 	var err error
