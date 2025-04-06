@@ -5,31 +5,39 @@ import (
 	"github.com/jimmyl0l3c/lunch-tui/styles"
 )
 
-type Restaurant struct {
-	Name  string
-	Meals []Meal
-	Err   error
+type PrintableColumn interface {
+	Render(maxWidth int) string
 }
 
-func RestaurantColumn(restaurant Restaurant, maxWidth int) string {
-	var content string
+type RestaurantData struct {
+	Name  string
+	Meals []Meal
+}
 
-	if restaurant.Err == nil {
-		content = Menu(restaurant.Meals, maxWidth)
-	} else {
-		content = styles.ErrorStyle.Width(maxWidth).Render("Error:", restaurant.Err.Error())
-	}
+func (restaurant RestaurantData) Render(maxWidth int) string {
+	content := Menu(restaurant.Meals, maxWidth)
 
 	return lipgloss.JoinVertical(lipgloss.Left, styles.ListHeader(restaurant.Name), content)
 }
 
-func RestaurantRow(restaurants []Restaurant, physicalWidth int) (row string) {
+type RestaurantError struct {
+	RestaurantName string
+	Msg            string
+}
+
+func (e *RestaurantError) Render(maxWidth int) string {
+	content := styles.ErrorStyle.Width(maxWidth).Render("Error:", e.Msg)
+
+	return lipgloss.JoinVertical(lipgloss.Left, styles.ListHeader(e.RestaurantName), content)
+}
+
+func RestaurantRow(restaurants []PrintableColumn, physicalWidth int) (row string) {
 	maxMenuWidth := (physicalWidth - 4 - (6 * len(restaurants))) / len(restaurants)
 
 	lastIndex := len(restaurants) - 1
 
 	for i, restaurant := range restaurants {
-		column := RestaurantColumn(restaurant, maxMenuWidth)
+		column := restaurant.Render(maxMenuWidth)
 
 		if i == 0 {
 			row = styles.List(column)

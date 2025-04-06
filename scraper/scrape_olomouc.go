@@ -1,7 +1,6 @@
 package scraper
 
 import (
-	"errors"
 	"fmt"
 	"regexp"
 
@@ -11,13 +10,12 @@ import (
 
 const soupPrice = "V ceně jídla"
 
-func ScrapeOlomouc(url string, restaurantName string, dateFilter string) menu.Restaurant {
+func ScrapeOlomouc(url string, restaurantName string, dateFilter string) menu.PrintableColumn {
 	c := colly.NewCollector()
 	c.CheckHead = true
 
-	restaurant := menu.Restaurant{Name: restaurantName, Meals: make([]menu.Meal, 0)}
-
-	var parsingErr error
+	var restaurant menu.PrintableColumn
+	var parsingErr *menu.RestaurantError
 
 	c.OnHTML("section[class=detail-restaurace]", func(e *colly.HTMLElement) {
 		meals := make([]menu.Meal, 0, 5)
@@ -39,7 +37,7 @@ func ScrapeOlomouc(url string, restaurantName string, dateFilter string) menu.Re
 		})
 
 		if menuIndex < 0 {
-			parsingErr = errors.New("Could not match date")
+			parsingErr = &menu.RestaurantError{RestaurantName: restaurantName, Msg: "Could not match date"}
 			return
 		}
 
@@ -65,21 +63,27 @@ func ScrapeOlomouc(url string, restaurantName string, dateFilter string) menu.Re
 			})
 		})
 
-		restaurant = menu.Restaurant{Name: restaurantName, Meals: meals}
+		if len(meals) == 0 {
+			return
+		}
+
+		restaurant = menu.RestaurantData{Name: restaurantName, Meals: meals}
 	})
 
 	requestErr := retryScrape(c, url)
 
 	if requestErr != nil {
-		restaurant.Err = requestErr
-	} else {
-		restaurant.Err = parsingErr
+		return &menu.RestaurantError{RestaurantName: restaurantName, Msg: requestErr.Error()}
+	} else if parsingErr != nil {
+		return parsingErr
+	} else if restaurant == nil {
+		return &menu.RestaurantError{RestaurantName: restaurantName, Msg: "Could not read menu"}
 	}
 
 	return restaurant
 }
 
-func ScrapeMd(dateFilter string) menu.Restaurant {
+func ScrapeMd(dateFilter string) menu.PrintableColumn {
 	return ScrapeOlomouc(
 		"https://www.olomouc.cz/poledni-menu/MD-Original-1869-id2208",
 		"M.D. Original 1869",
@@ -87,7 +91,7 @@ func ScrapeMd(dateFilter string) menu.Restaurant {
 	)
 }
 
-func ScrapePaulus(dateFilter string) menu.Restaurant {
+func ScrapePaulus(dateFilter string) menu.PrintableColumn {
 	return ScrapeOlomouc(
 		"https://www.olomouc.cz/poledni-menu/Bistro-Paulus-6806",
 		"Bistro Paulus",

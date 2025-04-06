@@ -1,8 +1,6 @@
 package scraper
 
 import (
-	"errors"
-
 	"github.com/gocolly/colly"
 	"github.com/jimmyl0l3c/lunch-tui/menu"
 )
@@ -12,13 +10,12 @@ const (
 	rozmarynyUrl   = "https://rozmaryny.cz/menu"
 )
 
-func ScrapeRozmaryny(dateFilter string) menu.Restaurant {
+func ScrapeRozmaryny(dateFilter string) menu.PrintableColumn {
 	c := colly.NewCollector()
 	c.CheckHead = true
 
-	restaurant := menu.Restaurant{Name: rozmarynyTitle, Meals: make([]menu.Meal, 0)}
-
-	var parsingErr error
+	var restaurant menu.PrintableColumn
+	var parsingErr *menu.RestaurantError
 
 	c.OnHTML("div[class=dailyMenuMainGroup]", func(e *colly.HTMLElement) {
 		if e.ChildText(".dailyMenuDate") != dateFilter {
@@ -42,22 +39,31 @@ func ScrapeRozmaryny(dateFilter string) menu.Restaurant {
 
 		e.ForEach(".dailyMenuDescRow", func(i int, h *colly.HTMLElement) {
 			if i >= len(meals) {
-				parsingErr = errors.New("Out of bounds: " + h.ChildText(".dailyMenuDesc"))
+				parsingErr = &menu.RestaurantError{
+					RestaurantName: rozmarynyTitle,
+					Msg:            "Out of bounds: " + h.ChildText(".dailyMenuDesc"),
+				}
 				return
 			}
 
 			meals[i].Detail = h.ChildText(".dailyMenuDesc")
 		})
 
-		restaurant = menu.Restaurant{Name: rozmarynyTitle, Meals: meals}
+		if len(meals) == 0 {
+			return
+		}
+
+		restaurant = menu.RestaurantData{Name: rozmarynyTitle, Meals: meals}
 	})
 
 	requestErr := retryScrape(c, rozmarynyUrl)
 
 	if requestErr != nil {
-		restaurant.Err = requestErr
-	} else {
-		restaurant.Err = parsingErr
+		return &menu.RestaurantError{RestaurantName: rozmarynyTitle, Msg: requestErr.Error()}
+	} else if parsingErr != nil {
+		return parsingErr
+	} else if restaurant == nil {
+		return &menu.RestaurantError{RestaurantName: rozmarynyTitle, Msg: "Could not read menu"}
 	}
 
 	return restaurant

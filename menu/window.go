@@ -9,12 +9,12 @@ import (
 	"golang.org/x/term"
 )
 
-func RenderWindow(scraperVersion string, ip string, currentDate string, restaurants []Restaurant) {
+func RenderWindow(scraperVersion string, ip string, menuDate string, restaurants []PrintableColumn) {
 	physicalWidth, physicalHeight, _ := term.GetSize(int(os.Stdout.Fd()))
 
 	style := styles.WindowStyle.Height(physicalHeight)
 
-	title := RenderTitle(scraperVersion, currentDate, physicalWidth)
+	title := RenderTitle(scraperVersion, menuDate, physicalWidth)
 
 	restaurantRow := RestaurantRow(restaurants, physicalWidth)
 
