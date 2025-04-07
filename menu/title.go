@@ -7,12 +7,12 @@ import (
 	"github.com/jimmyl0l3c/lunch-tui/styles"
 )
 
-func RenderTitle(version string, currentDate string, physicalWidth int) string {
+func RenderTitle(version string, menuDate string, physicalWidth int) string {
 	title := lipgloss.JoinVertical(lipgloss.Center,
 		styles.Title(fmt.Sprint(
 			"Toolchain lunch menu scraper",
 			styles.Divider,
-			currentDate,
+			menuDate,
 			styles.Divider,
 			styles.Url(version),
 		)),

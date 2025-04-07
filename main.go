@@ -11,7 +11,7 @@ import (
 	"github.com/jimmyl0l3c/lunch-tui/styles"
 )
 
-const scraperVersion = "v1.3.0"
+const scraperVersion = "v1.3.1"
 
 func getIp() string {
 	conn, err := net.Dial("udp", "8.8.8.8:80")
@@ -25,16 +25,22 @@ func getIp() string {
 	return conn.LocalAddr().String()
 }
 
-func printMenu(currentTime time.Time) {
-	currentDate := currentTime.Format("2.1.")
+func printMenu(menuTime time.Time) {
+	menuDate := menuTime.Format("2.1.")
 
-	restaurants := []menu.Restaurant{
-		scraper.ScrapeRozmaryny(currentDate),
-		scraper.ScrapeMd(currentDate),
-		scraper.ScrapePaulus(currentDate),
+	scrapers := []func(string) menu.PrintableColumn{
+		scraper.ScrapeRozmaryny,
+		scraper.ScrapeMd,
+		scraper.ScrapePaulus,
 	}
 
-	menu.RenderWindow(scraperVersion, getIp(), currentDate, restaurants)
+	restaurants := make([]menu.PrintableColumn, 0, len(scrapers))
+
+	for _, scraper := range scrapers {
+		restaurants = append(restaurants, scraper(menuDate))
+	}
+
+	menu.RenderWindow(scraperVersion, getIp(), menuDate, restaurants)
 }
 
 func main() {

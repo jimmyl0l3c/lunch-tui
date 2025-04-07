@@ -2,22 +2,20 @@ package scraper
 
 import (
 	"fmt"
+	"regexp"
+
 	"github.com/gocolly/colly"
 	"github.com/jimmyl0l3c/lunch-tui/menu"
-	"github.com/jimmyl0l3c/lunch-tui/styles"
-	"regexp"
 )
 
 const soupPrice = "V ceně jídla"
 
-func ScrapeOlomouc(url string, restaurantName string, dateFilter string) menu.Restaurant {
+func ScrapeOlomouc(url string, restaurantName string, dateFilter string) menu.PrintableColumn {
 	c := colly.NewCollector()
+	c.CheckHead = true
 
-	c.OnError(func(_ *colly.Response, err error) {
-		fmt.Println(styles.Error("Something went wrong:"), err)
-	})
-
-	restaurant := menu.Restaurant{Name: restaurantName, Meals: make([]menu.Meal, 0)}
+	var restaurant menu.PrintableColumn
+	var parsingErr *menu.RestaurantError
 
 	c.OnHTML("section[class=detail-restaurace]", func(e *colly.HTMLElement) {
 		meals := make([]menu.Meal, 0, 5)
@@ -39,7 +37,7 @@ func ScrapeOlomouc(url string, restaurantName string, dateFilter string) menu.Re
 		})
 
 		if menuIndex < 0 {
-			fmt.Println(styles.Error("Could not match date"))
+			parsingErr = &menu.RestaurantError{RestaurantName: restaurantName, Msg: "Could not match date"}
 			return
 		}
 
@@ -65,15 +63,27 @@ func ScrapeOlomouc(url string, restaurantName string, dateFilter string) menu.Re
 			})
 		})
 
-		restaurant = menu.Restaurant{Name: restaurantName, Meals: meals}
+		if len(meals) == 0 {
+			return
+		}
+
+		restaurant = menu.RestaurantData{Name: restaurantName, Meals: meals}
 	})
 
-	c.Visit(url)
+	requestErr := retryScrape(c, url)
+
+	if requestErr != nil {
+		return &menu.RestaurantError{RestaurantName: restaurantName, Msg: requestErr.Error()}
+	} else if parsingErr != nil {
+		return parsingErr
+	} else if restaurant == nil {
+		return &menu.RestaurantError{RestaurantName: restaurantName, Msg: "Could not read menu"}
+	}
 
 	return restaurant
 }
 
-func ScrapeMd(dateFilter string) menu.Restaurant {
+func ScrapeMd(dateFilter string) menu.PrintableColumn {
 	return ScrapeOlomouc(
 		"https://www.olomouc.cz/poledni-menu/MD-Original-1869-id2208",
 		"M.D. Original 1869",
@@ -81,7 +91,7 @@ func ScrapeMd(dateFilter string) menu.Restaurant {
 	)
 }
 
-func ScrapePaulus(dateFilter string) menu.Restaurant {
+func ScrapePaulus(dateFilter string) menu.PrintableColumn {
 	return ScrapeOlomouc(
 		"https://www.olomouc.cz/poledni-menu/Bistro-Paulus-6806",
 		"Bistro Paulus",
