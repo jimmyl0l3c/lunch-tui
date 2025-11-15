@@ -5,6 +5,7 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/list"
+
 	"github.com/jimmyl0l3c/lunch-tui/styles"
 )
 
@@ -19,6 +20,10 @@ func (m Meal) String(maxWidth int) string {
 
 	if len(m.Detail) > 0 {
 		detail = fmt.Sprint(styles.DetailStyle.Width(maxWidth).Render(m.Detail), "\n")
+	}
+
+	if len(detail) == 0 && len(m.Price) == 0 {
+		return styles.HighlightStyle.Width(maxWidth).Render(m.Name)
 	}
 
 	return fmt.Sprintf("%s\n%s%s",
