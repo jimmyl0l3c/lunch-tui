@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/gocolly/colly"
+
 	"github.com/jimmyl0l3c/lunch-tui/styles"
 )
 
@@ -13,7 +14,7 @@ const (
 	retryDelay = 5
 )
 
-func retryScrape(collector *colly.Collector, url string) error {
+func RetryScrape(collector *colly.Collector, url string) error {
 	var err error
 
 	for i := range retryCount {
