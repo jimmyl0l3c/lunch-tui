@@ -33,7 +33,7 @@ The JSON configuration should be a list of scraper configs, for example:
 
 ### Olomouc.cz
 
-Olomouc scraper scrapes the lunch menu section of [olomouc.cz](www.olomouc.cz/poledni-menu/).
+Olomouc scraper scrapes the lunch menu section of [olomouc.cz](https://www.olomouc.cz/poledni-menu/).
 
 In order to use it, find a restaurant you are interested in on the site and copy what we call `menuID` (the part of
 the URL after `/poledni-menu/`). For example `Bistro-Paulus-6806` in case of `https://www.olomouc.cz/poledni-menu/Bistro-Paulus-6806`.
@@ -56,7 +56,7 @@ the URL after `/poledni-menu/`). For example `Bistro-Paulus-6806` in case of `ht
 
 ### Rozmaryny.cz
 
-Rozmaryny scraper scrapes the [Bistro Rozmarýny](www.rozmaryny.cz), it has no additional options, only the mandatory
+Rozmaryny scraper scrapes the [Bistro Rozmarýny](https://rozmaryny.cz), it has no additional options, only the mandatory
 `type` which has to be "rozmaryny".
 
 **Full example:**
@@ -72,7 +72,7 @@ Since v2, it should be pretty easy to add additional scrapers. Feel free to crea
 To create a new scraper, create a file in the [./scraping/providers](./scraping/providers) directory with some reasonable
 name to describe it. You should create a new struct that has to implement the `scraper.RestaurantScraper` interface.
 
-Use [github.com/gocolly/colly](www.github.com/gocolly/colly) for the scraping. And the `scraper.RetryScrape` instead of
+Use [github.com/gocolly/colly](https://github.com/gocolly/colly) for the scraping. And the `scraper.RetryScrape` instead of
 `collector.Visit(url)`, if possible, to ensure the scraping does multiple attempts in case of connectivity issues.
 
 You also need to create a new scraper config in [./scraping/config/providers.go](./scraping/config/providers.go)
