@@ -57,7 +57,7 @@ the URL after `/poledni-menu/`). For example `Bistro-Paulus-6806` in case of `ht
 ### Rozmaryny.cz
 
 Rozmaryny scraper scrapes the [Bistro Rozmarýny](https://rozmaryny.cz), it has no additional options, only the mandatory
-`type` which has to be "rozmaryny".
+`type` which has to be `rozmaryny`.
 
 **Full example:**
 
