@@ -1,12 +1,12 @@
 module github.com/jimmyl0l3c/lunch-tui
 
-go 1.25.0
+go 1.26.0
 
 require (
 	github.com/alecthomas/kong v1.16.1
 	github.com/charmbracelet/lipgloss v1.1.0
 	github.com/gocolly/colly v1.2.0
-	golang.org/x/term v0.45.0
+	golang.org/x/term v0.47.0
 )
 
 require (
@@ -33,7 +33,7 @@ require (
 	github.com/temoto/robotstxt v1.1.2 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
 	golang.org/x/net v0.55.0 // indirect
-	golang.org/x/sys v0.47.0 // indirect
+	golang.org/x/sys v0.49.0 // indirect
 	golang.org/x/text v0.37.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
